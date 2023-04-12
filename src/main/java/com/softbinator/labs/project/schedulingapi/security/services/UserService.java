@@ -67,8 +67,8 @@ public class UserService {
 
 
         //DEBUG
-        for (var a : authenticationFacade.getAuthentication().getAuthorities())
-            System.out.println(a.getAuthority());
+//        for (var a : authenticationFacade.getAuthentication().getAuthorities())
+//            System.out.println(a.getAuthority());
 
         return token;
     }

@@ -105,9 +105,13 @@ public class TimeslotService {
             start = start.minus(
                     Duration.between(doc.getStartHour(), start).toMinutes() %
                             doc.getSlotLength().toMinutes(), ChronoUnit.MINUTES);
-            end = end.plus(doc.getSlotLength().toMinutes() -
-                    Duration.between(doc.getStartHour(), end).toMinutes() %
-                    doc.getSlotLength().toMinutes(), ChronoUnit.MINUTES);
+            if (Duration.between(doc.getStartHour(), end).toMinutes() %
+                    doc.getSlotLength().toMinutes() != 0)
+            {
+                end = end.plus(doc.getSlotLength().toMinutes() -
+                        Duration.between(doc.getStartHour(), end).toMinutes() %
+                                doc.getSlotLength().toMinutes(), ChronoUnit.MINUTES);
+            }
         }
         TimeslotStatus status;
         Patient patient = null;
@@ -121,7 +125,7 @@ public class TimeslotService {
             );
         }
 
-        for (LocalTime slot = start; slot.isBefore(end); slot = slot.plus(doc.getSlotLength())) {
+        for (LocalTime slot = start; slot.isBefore(end.minus(10, ChronoUnit.MINUTES)); slot = slot.plus(doc.getSlotLength())) {
             Timeslot newSlot = Timeslot.builder()
                     .date(day)
                     .startTime(slot)
